@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VORD — Gaming Clan</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;900&family=Crimson+Pro:wght@300;400&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --white: #FFFFFF;
+            --black: #0A0A0A;
+            --red: #fa0202;
+            --beige: #F5F0E8;
+            --peach: #FFE5D9;
+        }
+        
+        body.dark-theme {
+            --white: #0A0A0A;
+            --black: #FFFFFF;
+            --beige: #1a1a1a;
+            --peach: #2a2a2a;
+        }
+        
+        body {
+            font-family: 'Crimson Pro', serif;
+            background: var(--white);
+            color: var(--black);
+            cursor: default;
+            overflow-x: hidden;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        
+        .custom-cursor {
+            width: 8px;
+            height: 8px;
+            background: var(--red);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.2s ease;
+            display: none;
+        }
+        
+        .custom-cursor.active {
+            transform: scale(2);
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 60px 8%;
+            position: relative;
+        }
+        
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            font-size: 64px;
+            letter-spacing: -3px;
+            color: transparent;
+            -webkit-text-stroke: 2px var(--black);
+            text-stroke: 2px var(--black);
+            transition: all 0.4s ease;
+        }
+        
+        .logo:hover {
+            -webkit-text-stroke: 2px var(--red);
+            text-stroke: 2px var(--red);
+        }
+        
+        nav {
+            display: flex;
+            gap: 48px;
+            align-items: center;
+        }
+        
+        nav a {
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            font-size: 16px;
+            color: var(--black);
+            text-decoration: none;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--red);
+            transition: width 0.3s ease;
+        }
+        
+        nav a:hover {
+            color: var(--red);
+        }
+        
+        nav a:hover::after {
+            width: 100%;
+        }
+        
+        .language-switcher {
+            display: flex;
+            gap: 12px;
+            margin-left: 24px;
+            padding-left: 24px;
+            border-left: 1px solid #e0e0e0;
+        }
+        
+        .language-switcher button {
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            font-size: 14px;
+            color: var(--black);
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            padding: 0;
+            text-transform: uppercase;
+        }
+        
+        .language-switcher button:hover {
+            color: var(--red);
+        }
+        
+        .language-switcher button.active {
+            color: var(--red);
+            font-weight: 400;
+        }
+        
+        .theme-switcher {
+            display: flex;
+            align-items: center;
+            margin-left: 24px;
+            padding-left: 24px;
+            border-left: 1px solid #e0e0e0;
+        }
+        
+        .theme-toggle {
+            font-family: 'Inter', sans-serif;
+            font-size: 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            transition: transform 0.3s ease;
+        }
+        
+        .theme-toggle:hover {
+            transform: scale(1.2);
+        }
+        
+        .hero {
+            padding: 120px 8% 180px;
+            position: relative;
+        }
+        
+        .discord-widget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--beige);
+            border-radius: 16px;
+            padding: 20px 24px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+        
+        .discord-widget:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 48px rgba(0,0,0,0.18);
+        }
+        
+        .discord-icon {
+            width: 32px;
+            height: 32px;
+            background: #5865F2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .discord-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        
+        .discord-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            color: #999;
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .discord-count {
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--black);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .online-dot {
+            width: 8px;
+            height: 8px;
+            background: #43B581;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.7;
+                transform: scale(1.1);
+            }
+        }
+        
+        .hero-content {
+            max-width: 65%;
+        }
+        
+        .hero h1 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            font-size: 96px;
+            line-height: 1.1;
+            letter-spacing: -5px;
+            margin-bottom: 40px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease forwards;
+        }
+        
+        .hero p {
+            font-size: 20px;
+            line-height: 1.8;
+            font-weight: 300;
+            max-width: 580px;
+            color: #333;
+            margin-bottom: 60px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease 0.2s forwards;
+        }
+        
+        body.dark-theme .hero p {
+            color: #ccc;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 20px 48px;
+            background: var(--black);
+            color: var(--white);
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            font-size: 16px;
+            text-decoration: none;
+            border-radius: 0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease 0.4s forwards;
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--red);
+            transition: left 0.4s ease;
+            z-index: -1;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+        
+        .cta-button:hover::before {
+            left: 0;
+        }
+        
+        .templates-section {
+            padding: 80px 8% 120px;
+        }
+        
+        .templates-header {
+            margin-bottom: 60px;
+        }
+        
+        .templates-header h2 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            font-size: 56px;
+            line-height: 1.1;
+            letter-spacing: -3px;
+            margin-bottom: 20px;
+        }
+        
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 40px;
+        }
+        
+        .template-card {
+            background: var(--white);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .template-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.15);
+        }
+        
+        .template-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            background: var(--beige);
+        }
+        
+        .template-info {
+            padding: 32px;
+            text-align: center;
+        }
+        
+        .template-info h3 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            font-size: 24px;
+            margin-bottom: 12px;
+            letter-spacing: -1px;
+        }
+        
+        .template-coords {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 24px;
+            font-weight: 300;
+        }
+        
+        body.dark-theme .template-coords {
+            color: #999;
+        }
+        
+        .download-btn {
+            display: inline-block;
+            padding: 16px 40px;
+            background: var(--black);
+            color: var(--white);
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            font-size: 15px;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .download-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--red);
+            transition: left 0.4s ease;
+            z-index: -1;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+        
+        .download-btn:hover::before {
+            left: 0;
+        }
+        
+        .bento-grid {
+            padding: 80px 8% 120px;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 32px;
+        }
+        
+        .card {
+            background: var(--beige);
+            padding: 48px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: translateY(40px);
+        }
+        
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.08);
+        }
+        
+        .card-large {
+            grid-column: span 8;
+            min-height: 420px;
+        }
+        
+        .card-medium {
+            grid-column: span 4;
+            min-height: 420px;
+        }
+        
+        .card-small {
+            grid-column: span 6;
+            min-height: 320px;
+        }
+        
+        .card-accent {
+            background: linear-gradient(135deg, var(--peach) 0%, var(--beige) 100%);
+        }
+        
+        .card h2 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            font-size: 38px;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            letter-spacing: -2px;
+        }
+        
+        .card h3 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            font-size: 28px;
+            line-height: 1.3;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+        }
+        
+        .card p {
+            font-size: 17px;
+            line-height: 1.8;
+            color: #333;
+            font-weight: 300;
+        }
+        
+        body.dark-theme .card p {
+            color: #ccc;
+        }
+        
+        .card-meta {
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            color: #999;
+            margin-top: 24px;
+            font-weight: 300;
+        }
+        
+        .accent-circle {
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: var(--red);
+            opacity: 0.08;
+            bottom: -60px;
+            right: -60px;
+            transition: all 0.6s ease;
+        }
+        
+        .card:hover .accent-circle {
+            transform: scale(1.3);
+            opacity: 0.12;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 48px;
+            margin-top: 32px;
+        }
+        
+        .stat-item h4 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            font-size: 48px;
+            color: var(--red);
+            line-height: 1;
+        }
+        
+        .stat-item p {
+            font-size: 14px;
+            margin-top: 8px;
+            color: #666;
+        }
+        
+        body.dark-theme .stat-item p {
+            color: #999;
+        }
+        
+        footer {
+            padding: 80px 8%;
+            background: #0A0A0A;
+            color: #FFFFFF;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-logo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            font-size: 48px;
+            letter-spacing: -2px;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 32px;
+        }
+        
+        .footer-links a {
+            color: #FFFFFF;
+            text-decoration: none;
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--red);
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @media (max-width: 1024px) {
+            .card-large,
+            .card-medium,
+            .card-small {
+                grid-column: span 12;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                padding: 30px 5%;
+            }
+            
+            .logo {
+                font-size: 42px;
+                letter-spacing: -2px;
+            }
+            
+            nav {
+                gap: 16px;
+            }
+            
+            nav a {
+                font-size: 14px;
+            }
+            
+            .language-switcher {
+                margin-left: 12px;
+                padding-left: 12px;
+            }
+            
+            .theme-switcher {
+                margin-left: 12px;
+                padding-left: 12px;
+            }
+            
+            .discord-widget {
+                bottom: 20px;
+                right: 20px;
+                padding: 16px 20px;
+            }
+            
+            .discord-icon {
+                width: 28px;
+                height: 28px;
+                font-size: 18px;
+            }
+            
+            .discord-count {
+                font-size: 16px;
+            }
+            
+            .hero {
+                padding: 60px 5% 80px;
+            }
+            
+            .hero h1 {
+                font-size: 42px;
+                letter-spacing: -2px;
+                margin-bottom: 24px;
+            }
+            
+            .hero p {
+                font-size: 18px;
+                line-height: 1.6;
+                margin-bottom: 40px;
+            }
+            
+            .hero-content {
+                max-width: 100%;
+            }
+            
+            .cta-button {
+                width: 100%;
+                text-align: center;
+                padding: 18px 32px;
+            }
+            
+            .templates-section {
+                padding: 40px 5% 60px;
+            }
+            
+            .templates-header h2 {
+                font-size: 42px;
+                letter-spacing: -2px;
+            }
+            
+            .templates-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .template-image {
+                height: 300px;
+            }
+            
+            .bento-grid {
+                padding: 40px 5% 60px;
+                gap: 20px;
+            }
+            
+            .card {
+                padding: 32px;
+                min-height: auto !important;
+            }
+            
+            .card h2 {
+                font-size: 32px;
+                letter-spacing: -1px;
+            }
+            
+            .card h3 {
+                font-size: 24px;
+            }
+            
+            .card p {
+                font-size: 16px;
+                line-height: 1.6;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 24px;
+            }
+            
+            .stat-item h4 {
+                font-size: 40px;
+            }
+            
+            .accent-circle {
+                width: 120px;
+                height: 120px;
+            }
+            
+            footer {
+                padding: 60px 5%;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 32px;
+                text-align: center;
+            }
+            
+            .footer-logo {
+                font-size: 36px;
+            }
+            
+            .footer-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="custom-cursor"></div>
+    
+    <!-- Discord Widget -->
+    <a href="https://dsc.gg/VORD" target="_blank" class="discord-widget">
+        <div class="discord-icon">💬</div>
+        <div class="discord-info">
+            <span class="discord-label">Discord</span>
+            <div class="discord-count">
+                <span class="online-dot"></span>
+                <span id="online-count">23</span> онлайн
+            </div>
+        </div>
+    </a>
+    
+    <header>
+        <div class="logo">VORD</div>
+        <nav>
+            <a href="#about" data-ru="О клане" data-en="About">О клане</a>
+            <a href="#templates" data-ru="Шаблоны" data-en="Templates">Шаблоны</a>
+            <a href="#achievements" data-ru="Достижения" data-en="Achievements">Достижения</a>
+            <a href="#join" data-ru="Вступить" data-en="Join">Вступить</a>
+            <div class="language-switcher">
+                <button class="lang-btn active" data-lang="ru">RU</button>
+                <button class="lang-btn" data-lang="en">EN</button>
+            </div>
+            <div class="theme-switcher">
+                <button class="theme-toggle" aria-label="Toggle theme">🌙</button>
+            </div>
+        </nav>
+    </header>
+    
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Доминируем в каждой игре</h1>
+            <p>Мы крупный клан, который играет в Pixelya.fun и Drawaria. Раньше мы активно доминировали в PixUniverse, где заслужили репутацию одного из сильнейших сообществ. Сейчас мы создаём пиксельные шедевры, строим невероятные миры и весело проводим время вместе!</p>
+            <a href="#join" class="cta-button">Присоединиться к нам</a>
+        </div>
+    </section>
+    
+    <section class="templates-section" id="templates">
+        <div class="templates-header">
+            <h2>Шаблоны клана</h2>
+        </div>
+        <div class="templates-grid">
+            <div class="template-card">
+                <img src="https://i.postimg.cc/d06nYQc1/IMG-5724.png" alt="Основной шаблон VORD" class="template-image">
+                <div class="template-info">
+                    <h3>Основной шаблон VORD</h3>
+                    <p class="template-coords">Координаты: 10255, -22608</p>
+                    <a href="https://i.postimg.cc/d06nYQc1/IMG-5724.png" class="download-btn" download>Скачать</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="bento-grid" id="achievements">
+        <div class="card card-large">
+            <h2>Наши достижения</h2>
+            <p>За время существования клана VORD мы добились значительных успехов и оставили свой след в истории серверов:</p>
+            <ul style="margin-top: 24px; font-size: 17px; line-height: 1.8; color: #333; list-style-position: inside;">
+                <li>RedPix</li>
+                <li>Коричневые (МедноБыковск)</li>
+                <li>Gulag</li>
+                <li>Белые, которые были на месте Южноберегенска</li>
+                <li>RoscomnadzorPix (разделили с анти КВД пикс)</li>
+            </ul>
+            <div class="accent-circle"></div>
+        </div>
+        
+        <div class="card card-large card-accent" id="about">
+            <h2>О клане VORD</h2>
+            <p>Мы крупное игровое сообщество, которое объединяет любителей творческих онлайн-игр. Основное направление нашего клана — Pixelya.fun, где мы создаём невероятные пиксельные шедевры и доминируем на серверах. Раньше мы активно играли в PixUniverse, где заслужили репутацию одного из сильнейших кланов. Также наши участники регулярно собираются в Drawaria, устраивая весёлые вечера рисования и угадывания.</p>
+            <div class="stats">
+                <div class="stat-item">
+                    <h4>3</h4>
+                    <p>Основные игры</p>
+                </div>
+                <div class="stat-item">
+                    <h4>20+</h4>
+                    <p>Активных участников</p>
+                </div>
+            </div>
+            <div class="accent-circle"></div>
+        </div>
+        
+        <div class="card card-medium">
+            <h3>Pixelya.fun</h3>
+            <p>Наша основная игровая площадка. Здесь мы строим, создаём и доминируем вместе с самыми творческими игроками.</p>
+            <div class="card-meta">Активно сейчас</div>
+            <div class="accent-circle"></div>
+        </div>
+        
+        <div class="card card-small">
+            <h3>PixUniverse</h3>
+            <p>Ветераны клана помнят наши легендарные времена в этой игре. История началась здесь.</p>
+            <div class="card-meta">Архив клана</div>
+        </div>
+        
+        <div class="card card-small">
+            <h3>Drawaria</h3>
+            <p>Весёлые вечера рисования и угадывания. Здесь мы отдыхаем и веселимся всем кланом.</p>
+            <div class="card-meta">Регулярные сессии</div>
+        </div>
+        
+        <div class="card card-large" id="join">
+            <h2>Как попасть в VORD</h2>
+            <p>Мы ищем талантливых и мотивированных игроков. Отправь заявку, пройди отбор и стань частью легенды. Требования: высокий ранг, командный дух, стремление к победе.</p>
+            <a href="https://dsc.gg/VORD" target="_blank" class="cta-button" style="margin-top: 24px;">Подать заявку</a>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">VORD</div>
+            <div class="footer-links">
+                <a href="https://dsc.gg/VORD" target="_blank">Discord</a>
+                <a href="https://www.tiktok.com/@coretech19?_r=1&_t=ZS-92yuXwdvZOG" target="_blank">TikTok</a>
+                <a href="https://t.me/VORDNEWS" target="_blank">Telegram</a>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        const cursor = document.querySelector('.custom-cursor');
+        let mouseX = 0;
+        let mouseY = 0;
+        let cursorX = 0;
+        let cursorY = 0;
+        
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+        
+        function animateCursor() {
+            cursorX += (mouseX - cursorX) * 0.15;
+            cursorY += (mouseY - cursorY) * 0.15;
+            
+            cursor.style.left = cursorX + 'px';
+            cursor.style.top = cursorY + 'px';
+            cursor.style.display = 'block';
+            
+            requestAnimationFrame(animateCursor);
+        }
+        
+        animateCursor();
+        
+        const clickableElements = document.querySelectorAll('a, button');
+        clickableElements.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursor.classList.add('active');
+            });
+            el.addEventListener('mouseleave', () => {
+                cursor.classList.remove('active');
+            });
+        });
+        
+        const cards = document.querySelectorAll('.card');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, index * 100);
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+        
+        cards.forEach(card => {
+            observer.observe(card);
+        });
+        
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Language switcher
+        const translations = {
+            ru: {
+                hero_title: 'Доминируем в каждой игре',
+                hero_text: 'Мы крупный клан, который играет в Pixelya.fun и Drawaria. Раньше мы активно доминировали в PixUniverse, где заслужили репутацию одного из сильнейших сообществ. Сейчас мы создаём пиксельные шедевры, строим невероятные миры и весело проводим время вместе!',
+                cta_button: 'Присоединиться к нам',
+                templates_title: 'Шаблоны клана',
+                template1_name: 'Основной шаблон VORD',
+                template1_coords: 'Координаты: 10255, -22608',
+                download_btn: 'Скачать',
+                achievements_title: 'Наши достижения',
+                achievements_text: 'За время существования клана VORD мы добились значительных успехов и оставили свой след в истории серверов:',
+                achievement1: 'RedPix',
+                achievement2: 'Коричневые (МедноБыковск)',
+                achievement3: 'Gulag',
+                achievement4: 'Белые, которые были на месте Южноберегенска',
+                achievement5: 'RoscomnadzorPix (разделили с анти КВД пикс)',
+                about_title: 'О клане VORD',
+                about_text: 'Мы крупное игровое сообщество, которое объединяет любителей творческих онлайн-игр. Основное направление нашего клана — Pixelya.fun, где мы создаём невероятные пиксельные шедевры и доминируем на серверах. Раньше мы активно играли в PixUniverse, где заслужили репутацию одного из сильнейших кланов. Также наши участники регулярно собираются в Drawaria, устраивая весёлые вечера рисования и угадывания.',
+                stat1: 'Основные игры',
+                stat2: 'Активных участников',
+                pixelya_title: 'Pixelya.fun',
+                pixelya_text: 'Наша основная игровая площадка. Здесь мы строим, создаём и доминируем вместе с самыми творческими игроками.',
+                pixelya_meta: 'Активно сейчас',
+                pixuniverse_title: 'PixUniverse',
+                pixuniverse_text: 'Ветераны клана помнят наши легендарные времена в этой игре. История началась здесь.',
+                pixuniverse_meta: 'Архив клана',
+                drawaria_title: 'Drawaria',
+                drawaria_text: 'Весёлые вечера рисования и угадывания. Здесь мы отдыхаем и веселимся всем кланом.',
+                drawaria_meta: 'Регулярные сессии',
+                join_title: 'Как попасть в VORD',
+                join_text: 'Мы ищем талантливых и мотивированных игроков. Отправь заявку, пройди отбор и стань частью легенды. Требования: высокий ранг, командный дух, стремление к победе.',
+                join_button: 'Подать заявку'
+            },
+            en: {
+                hero_title: 'Dominating Every Game',
+                hero_text: 'We are a large clan playing Pixelya.fun and Drawaria. Previously, we actively dominated PixUniverse, where we earned a reputation as one of the strongest communities. Now we create pixel masterpieces, build incredible worlds and have fun together!',
+                cta_button: 'Join Us',
+                templates_title: 'Clan Templates',
+                template1_name: 'Main VORD Template',
+                template1_coords: 'Coordinates: 10255, -22608',
+                download_btn: 'Download',
+                achievements_title: 'Our Achievements',
+                achievements_text: 'During the existence of the VORD clan, we have achieved significant success and left our mark in server history:',
+                achievement1: 'RedPix',
+                achievement2: 'Brown (MednoBykivsk)',
+                achievement3: 'Gulag',
+                achievement4: 'Whites that were in place of Yuzhnoberegensk',
+                achievement5: 'RoscomnadzorPix (shared with anti KVD pix)',
+                about_title: 'About VORD Clan',
+                about_text: 'We are a large gaming community that brings together fans of creative online games. The main focus of our clan is Pixelya.fun, where we create incredible pixel masterpieces and dominate the servers. Previously, we actively played PixUniverse, where we earned a reputation as one of the strongest clans. Our members also regularly gather in Drawaria for fun drawing and guessing sessions.',
+                stat1: 'Main Games',
+                stat2: 'Active Members',
+                pixelya_title: 'Pixelya.fun',
+                pixelya_text: 'Our main gaming platform. Here we build, create and dominate together with the most creative players.',
+                pixelya_meta: 'Active now',
+                pixuniverse_title: 'PixUniverse',
+                pixuniverse_text: 'Clan veterans remember our legendary times in this game. The story began here.',
+                pixuniverse_meta: 'Clan Archive',
+                drawaria_title: 'Drawaria',
+                drawaria_text: 'Fun drawing and guessing evenings. Here we relax and have fun with the whole clan.',
+                drawaria_meta: 'Regular sessions',
+                join_title: 'How to Join VORD',
+                join_text: 'We are looking for talented and motivated players. Submit your application, pass the selection and become part of the legend. Requirements: high rank, team spirit, desire to win.',
+                join_button: 'Apply Now'
+            }
+        };
+        
+        const langBtns = document.querySelectorAll('.lang-btn');
+        const navLinks = document.querySelectorAll('nav a');
+        
+        langBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const lang = this.dataset.lang;
+                
+                langBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                navLinks.forEach(link => {
+                    link.textContent = link.dataset[lang];
+                });
+                
+                document.querySelector('.templates-header h2').textContent = translations[lang].templates_title;
+                document.querySelector('.template-info h3').textContent = translations[lang].template1_name;
+                document.querySelector('.template-coords').textContent = translations[lang].template1_coords;
+                document.querySelector('.download-btn').textContent = translations[lang].download_btn;
+                
+                document.querySelector('.hero h1').textContent = translations[lang].hero_title;
+                document.querySelector('.hero p').textContent = translations[lang].hero_text;
+                document.querySelectorAll('.cta-button')[0].textContent = translations[lang].cta_button;
+                
+                document.querySelector('#about h2').textContent = translations[lang].about_title;
+                document.querySelector('#about p').textContent = translations[lang].about_text;
+                document.querySelectorAll('.stat-item p')[0].textContent = translations[lang].stat1;
+                document.querySelectorAll('.stat-item p')[1].textContent = translations[lang].stat2;
+                
+                const achievementsCard = document.querySelector('#achievements .card-large');
+                achievementsCard.querySelector('h2').textContent = translations[lang].achievements_title;
+                achievementsCard.querySelector('p').textContent = translations[lang].achievements_text;
+                const achievementsList = achievementsCard.querySelectorAll('li');
+                achievementsList[0].textContent = translations[lang].achievement1;
+                achievementsList[1].textContent = translations[lang].achievement2;
+                achievementsList[2].textContent = translations[lang].achievement3;
+                achievementsList[3].textContent = translations[lang].achievement4;
+                achievementsList[4].textContent = translations[lang].achievement5;
+                
+                const allCards = document.querySelectorAll('.card');
+                
+                const pixelyaCard = allCards[2];
+                pixelyaCard.querySelector('h3').textContent = translations[lang].pixelya_title;
+                pixelyaCard.querySelector('p').textContent = translations[lang].pixelya_text;
+                pixelyaCard.querySelector('.card-meta').textContent = translations[lang].pixelya_meta;
+                
+                const pixuniverseCard = allCards[3];
+                pixuniverseCard.querySelector('h3').textContent = translations[lang].pixuniverse_title;
+                pixuniverseCard.querySelector('p').textContent = translations[lang].pixuniverse_text;
+                pixuniverseCard.querySelector('.card-meta').textContent = translations[lang].pixuniverse_meta;
+                
+                const drawariaCard = allCards[4];
+                drawariaCard.querySelector('h3').textContent = translations[lang].drawaria_title;
+                drawariaCard.querySelector('p').textContent = translations[lang].drawaria_text;
+                drawariaCard.querySelector('.card-meta').textContent = translations[lang].drawaria_meta;
+                
+                const joinCard = document.querySelector('#join');
+                joinCard.querySelector('h2').textContent = translations[lang].join_title;
+                joinCard.querySelector('p').textContent = translations[lang].join_text;
+                joinCard.querySelector('.cta-button').textContent = translations[lang].join_button;
+            });
+        });
+        
+        // Theme switcher
+        const themeToggle = document.querySelector('.theme-toggle');
+        const body = document.body;
+        
+        themeToggle.addEventListener('click', function() {
+            body.classList.toggle('dark-theme');
+            
+            if (body.classList.contains('dark-theme')) {
+                themeToggle.textContent = '☀️';
+            } else {
+                themeToggle.textContent = '🌙';
+            }
+        });
+        
+        // Discord online counter animation
+        const onlineCount = document.getElementById('online-count');
+        let currentCount = 23;
+        
+        // Simulate changing online count
+        setInterval(() => {
+            const change = Math.random() > 0.5 ? 1 : -1;
+            const newCount = currentCount + change;
+            if (newCount >= 15 && newCount <= 35) {
+                currentCount = newCount;
+                onlineCount.textContent = currentCount;
+            }
+        }, 5000);
+    </script>
+</body>
+</html>
